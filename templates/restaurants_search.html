@@ -1,7 +1,7 @@
 {% load static %}
 
 <h1>近くのレストランを検索</h1>
-<form method="post" action="{% url 'restaurants:result' %}">
+<form method="post" action="{% url 'restaurants:results' %}">
     {% csrf_token %}
     <input type="text" id="latitude" name="latitude" required readonly>
     <input type="text" id="longitude" name="longitude" required readonly>

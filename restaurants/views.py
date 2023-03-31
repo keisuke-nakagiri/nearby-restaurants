@@ -10,7 +10,7 @@ class RestaurantsSearchView(TemplateView):
     template_name = 'restaurants_search.html'
     
     
-class RestaurantsResultView(TemplateView):
+class RestaurantsResultsView(TemplateView):
     template_name = 'restaurants_results.html'
 
     def post(self, request):
