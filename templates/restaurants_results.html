@@ -1,0 +1,15 @@
+<h1>検索結果</h1>
+<ul>
+    {% for restaurant in restaurants %}
+        <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
+            <li>
+                <h2>{{ restaurant.name }}</h2>
+                <p>{{ restaurant.access }}</p>
+                <img src="{{ restaurant.logo_image }}" alt="{{ restaurant.name }}">
+            </li>
+        </a>
+    {% empty %}
+        <p>該当する店舗がありませんでした。</p>
+    {% endfor %}
+    <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
+</ul>

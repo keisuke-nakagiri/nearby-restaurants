@@ -1,0 +1,6 @@
+<h1>店舗詳細</h1>
+<p>店舗名: {{ restaurant.name }}</p>
+<p>住所: {{ restaurant.address }}</p>
+<p>営業時間: {{ restaurant.open }}</p>
+<img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
+<a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
