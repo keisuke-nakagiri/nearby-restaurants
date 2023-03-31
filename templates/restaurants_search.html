@@ -1,18 +1,22 @@
+{% extends 'base.html' %}
 {% load static %}
 
-<h1>近くのレストランを検索</h1>
-<form method="post" action="{% url 'restaurants:results' %}">
-    {% csrf_token %}
-    <input type="text" id="latitude" name="latitude" required readonly>
-    <input type="text" id="longitude" name="longitude" required readonly>
-    <select name="range">
-        <option value="1">300m</option>
-        <option value="2">500m</option>
-        <option value="3">1km</option>
-        <option value="4">2km</option>
-        <option value="5">3km</option>
-    </select>
-    <button type="submit">検索</button>
-</form>
+{% block title %}レストラン検索{% endblock %}
+{% block content %}
+    <h1>近くのレストランを検索</h1>
+    <form method="post" action="{% url 'restaurants:results' %}">
+        {% csrf_token %}
+        <input type="text" id="latitude" name="latitude" required readonly>
+        <input type="text" id="longitude" name="longitude" required readonly>
+        <select name="range">
+            <option value="1">300m</option>
+            <option value="2">500m</option>
+            <option value="3">1km</option>
+            <option value="4">2km</option>
+            <option value="5">3km</option>
+        </select>
+        <button type="submit">検索</button>
+    </form>
 
-<script src="{% static 'js/geolocation.js' %}"></script>
+    <script src="{% static 'js/geolocation.js' %}"></script>
+{% endblock %}
