@@ -17,6 +17,7 @@ class RestaurantsResultsView(TemplateView):
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         range = request.POST.get('range')
+        genre = request.POST.get('genre')
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
         params = {
@@ -24,6 +25,7 @@ class RestaurantsResultsView(TemplateView):
             'lat': latitude,
             'lng': longitude,
             'range': range,
+            'genre': genre,
             'count': 100,
             'format': 'json',
         }
