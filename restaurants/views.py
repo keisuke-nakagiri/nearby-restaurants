@@ -24,12 +24,17 @@ class RestaurantsResultsView(TemplateView):
             'lat': latitude,
             'lng': longitude,
             'range': range,
+            'count': 100,
             'format': 'json',
         }
 
         response = requests.get(url, params)
         restaurants = response.json()['results']['shop']
-        context = {'restaurants': restaurants}
+        results_returned = response.json()['results']['results_returned']
+        context = {
+            'restaurants': restaurants,
+            'results_returned': results_returned,
+        }
         return self.render_to_response(context)
 
 

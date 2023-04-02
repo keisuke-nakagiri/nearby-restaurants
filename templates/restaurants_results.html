@@ -2,7 +2,7 @@
 
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
-    <h1>検索結果</h1>
+    <h1>検索結果 {{ results_returned }}件</h1>
     <ul>
         {% for restaurant in restaurants %}
             <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
