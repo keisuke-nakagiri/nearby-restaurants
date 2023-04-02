@@ -16,7 +16,7 @@ class RestaurantsResultsView(TemplateView):
     def post(self, request):
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
-        range = request.POST.get('range')
+        search_range = request.POST.get('range')
         genre = request.POST.get('genre')
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
@@ -24,18 +24,27 @@ class RestaurantsResultsView(TemplateView):
             'key': HOTPEPPER_API_KEY,
             'lat': latitude,
             'lng': longitude,
-            'range': range,
+            'range': search_range,
             'genre': genre,
+            'start': 1,
             'count': 100,
             'format': 'json',
         }
 
         response = requests.get(url, params)
-        restaurants = response.json()['results']['shop']
-        results_returned = response.json()['results']['results_returned']
+        data = response.json()
+        restaurants = data['results']['shop']
+        total_hit_count = data['results']['results_available']
+
+        for i in range(1, total_hit_count // 100 + 1):
+            params['start'] = i * 100 + 1
+            response = requests.get(url, params)
+            restaurants += response.json()['results']['shop']
+            print(params['start'])
+
         context = {
             'restaurants': restaurants,
-            'results_returned': results_returned,
+            'total_hit_count': total_hit_count,
         }
         return self.render_to_response(context)
 
@@ -53,6 +62,7 @@ class RestaurantsDetailView(TemplateView):
             'format': 'json',
         }
         response = requests.get(url, params)
-        restaurant = response.json()['results']['shop'][0]
+        data = response.json()
+        restaurant = data['results']['shop'][0]
         context["restaurant"] = restaurant
         return context
