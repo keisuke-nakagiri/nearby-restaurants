@@ -2,6 +2,7 @@ import requests
 
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from config.settings import HOTPEPPER_API_KEY
 
@@ -13,10 +14,21 @@ class RestaurantsSearchView(TemplateView):
 class RestaurantsResultsView(TemplateView):
     template_name = 'restaurants_results.html'
 
+    def get_restaurants_pages(self, restaurants, page=None):
+        paginator = Paginator(restaurants, 20)
+        try:
+            pages = paginator.page(page)
+        except PageNotAnInteger:
+            pages = paginator.page(1)
+        except EmptyPage:
+            pages = paginator.page(1)
+
+        return pages
+
     def post(self, request):
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
-        search_range = request.POST.get('range')
+        search_range = request.POST.get('search_range')
         genre = request.POST.get('genre')
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
@@ -40,12 +52,18 @@ class RestaurantsResultsView(TemplateView):
             params['start'] = i * 100 + 1
             response = requests.get(url, params)
             restaurants += response.json()['results']['shop']
-            print(params['start'])
+        
+        request.session['restaurants'] = restaurants
 
-        context = {
-            'restaurants': restaurants,
-            'total_hit_count': total_hit_count,
-        }
+        pages = self.get_restaurants_pages(restaurants=restaurants, page=None)
+        context = {'restaurants': pages}
+        return self.render_to_response(context)
+    
+    def get(self, request):
+        restaurants = request.session.get('restaurants')
+        page = request.GET.get('page')
+        pages = self.get_restaurants_pages(restaurants=restaurants, page=page)
+        context = {'restaurants': pages}
         return self.render_to_response(context)
 
 

@@ -2,7 +2,21 @@
 
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
-    <h1>検索結果 {{ total_hit_count }}件</h1>
+    <p>
+        検索結果 {{ restaurants.paginator.count }}件
+        <span>（{{ restaurants.start_index }}~{{ restaurants.end_index }}件）</span>
+    </p>
+
+    {% if restaurants.has_previous %}
+            <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
+    {% endif %}
+
+    {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
+
+    {% if restaurants.has_next %}
+        <a href="?page={{ restaurants.next_page_number }}">次へ</a>
+    {% endif %}
+
     <ul>
         {% for restaurant in restaurants %}
             <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
@@ -15,6 +29,18 @@
         {% empty %}
             <p>該当する店舗がありませんでした。</p>
         {% endfor %}
-        <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
+
     </ul>
+
+    {% if restaurants.has_previous %}
+        <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
+    {% endif %}
+
+    {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
+
+    {% if restaurants.has_next %}
+        <a href="?page={{ restaurants.next_page_number }}">次へ</a>
+    {% endif %}
+
+    <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
 {% endblock %}
