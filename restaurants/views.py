@@ -24,12 +24,28 @@ class RestaurantsResultsView(TemplateView):
             pages = paginator.page(1)
 
         return pages
+    
+    def get_genre_name(self, genre_id):
+        if not genre_id:
+            return None
+        
+        url = 'http://webservice.recruit.co.jp/hotpepper/genre/v1/'
+        params = {
+            'key': HOTPEPPER_API_KEY,
+            'code': genre_id,
+            'format': 'json',
+        }
+        response = requests.get(url, params)
+        data = response.json()
+        genre_name = data['results']['genre'][0]['name']
+
+        return genre_name
 
     def post(self, request):
         latitude = request.POST.get('latitude')
         longitude = request.POST.get('longitude')
         search_range = request.POST.get('search_range')
-        genre = request.POST.get('genre')
+        genre_id = request.POST.get('genre_id')
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
         params = {
@@ -37,7 +53,7 @@ class RestaurantsResultsView(TemplateView):
             'lat': latitude,
             'lng': longitude,
             'range': search_range,
-            'genre': genre,
+            'genre': genre_id,
             'start': 1,
             'count': 100,
             'format': 'json',
@@ -53,17 +69,28 @@ class RestaurantsResultsView(TemplateView):
             response = requests.get(url, params)
             restaurants += response.json()['results']['shop']
         
+        genre_name = self.get_genre_name(genre_id=genre_id)
+
+        request.session['genre_name'] = genre_name
         request.session['restaurants'] = restaurants
 
         pages = self.get_restaurants_pages(restaurants=restaurants, page=None)
-        context = {'restaurants': pages}
+
+        context = {
+            'restaurants': pages,
+            'genre_name': genre_name,
+        }
         return self.render_to_response(context)
     
     def get(self, request):
         restaurants = request.session.get('restaurants')
+        genre_name = request.session.get('genre_name')
         page = request.GET.get('page')
         pages = self.get_restaurants_pages(restaurants=restaurants, page=page)
-        context = {'restaurants': pages}
+        context = {
+            'restaurants': pages,
+            'genre_name': genre_name,
+        }
         return self.render_to_response(context)
 
 

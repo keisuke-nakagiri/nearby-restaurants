@@ -2,6 +2,10 @@
 
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
+    {% if genre_name %}
+        <p>ジャンル {{ genre_name }}</p>
+    {% endif %}
+    
     <p>
         検索結果 {{ restaurants.paginator.count }}件
         <span>（{{ restaurants.start_index }}~{{ restaurants.end_index }}件）</span>
