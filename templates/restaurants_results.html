@@ -2,6 +2,8 @@
 
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
+    <h1>現在地から{{ search_range }}以内にあるお店</h1>
+    
     {% if genre_name %}
         <p>ジャンル {{ genre_name }}</p>
     {% endif %}

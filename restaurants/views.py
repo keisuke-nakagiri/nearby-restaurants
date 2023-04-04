@@ -14,6 +14,14 @@ class RestaurantsSearchView(TemplateView):
 class RestaurantsResultsView(TemplateView):
     template_name = 'restaurants_results.html'
 
+    SEARCH_RANGE_DICT = {
+        '1': '300m',
+        '2': '500m',
+        '3': '1km',
+        '4': '2km',
+        '5': '3km',
+    }
+
     def get_restaurants_pages(self, restaurants, page=None):
         paginator = Paginator(restaurants, 20)
         try:
@@ -71,25 +79,29 @@ class RestaurantsResultsView(TemplateView):
         
         genre_name = self.get_genre_name(genre_id=genre_id)
 
-        request.session['genre_name'] = genre_name
         request.session['restaurants'] = restaurants
+        request.session['genre_name'] = genre_name
+        request.session['search_range'] = self.SEARCH_RANGE_DICT.get(search_range)
 
         pages = self.get_restaurants_pages(restaurants=restaurants, page=None)
 
         context = {
             'restaurants': pages,
             'genre_name': genre_name,
+            'search_range': self.SEARCH_RANGE_DICT.get(search_range)
         }
         return self.render_to_response(context)
     
     def get(self, request):
         restaurants = request.session.get('restaurants')
         genre_name = request.session.get('genre_name')
+        search_range = request.session.get('search_range')
         page = request.GET.get('page')
         pages = self.get_restaurants_pages(restaurants=restaurants, page=page)
         context = {
             'restaurants': pages,
             'genre_name': genre_name,
+            'search_range': search_range,
         }
         return self.render_to_response(context)
 
