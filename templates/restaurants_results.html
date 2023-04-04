@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
+
+    {% include 'widgets/form.html' %}
+
     <h1>現在地から{{ search_range }}以内にあるお店</h1>
     
     {% if genre_name %}
@@ -49,4 +52,6 @@
     {% endif %}
 
     <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
+
+    <script src="{% static 'js/geolocation.js' %}"></script>
 {% endblock %}
