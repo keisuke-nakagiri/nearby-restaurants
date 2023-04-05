@@ -5,16 +5,18 @@
 
     {% include 'widgets/form.html' %}
 
-    <h1>現在地から{{ search_range }}以内にあるお店</h1>
-    
-    {% if genre_name %}
-        <p>ジャンル {{ genre_name }}</p>
-    {% endif %}
-    
-    <p>
-        検索結果 {{ restaurants.paginator.count }}件
-        <span>（{{ restaurants.start_index }}~{{ restaurants.end_index }}件）</span>
-    </p>
+    <div>
+        <h1>
+            現在地から{{ search_range }}以内にあるお店
+            {% if genre_name %}
+                ・{{ genre_name }}
+            {% endif %}
+        </h1>
+        <p>
+            {{ restaurants.paginator.count }}件 - 
+            <span>{{ restaurants.start_index }}~{{ restaurants.end_index }}件</span>
+        </p>
+    </div>
 
     {% if restaurants.has_previous %}
             <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
@@ -26,20 +28,19 @@
         <a href="?page={{ restaurants.next_page_number }}">次へ</a>
     {% endif %}
 
-    <ul>
-        {% for restaurant in restaurants %}
+    {% for restaurant in restaurants %}
+        <div class="card">
+            <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
             <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
-                <li>
-                    <h2>{{ restaurant.name }}</h2>
-                    <p>{{ restaurant.access }}</p>
-                    <img src="{{ restaurant.logo_image }}" alt="{{ restaurant.name }}">
-                </li>
+                <h1>{{ restaurant.name }}</h2>
             </a>
-        {% empty %}
-            <p>該当する店舗がありませんでした。</p>
-        {% endfor %}
-
-    </ul>
+            <p>{{ genre_name }}</p>
+            <p>{{ restaurant.access }}</p>
+            <p>{{ restaurant.catch }}</p>
+        </div>
+    {% empty %}
+        <p>該当する店舗がありませんでした。</p>
+    {% endfor %}
 
     {% if restaurants.has_previous %}
         <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
@@ -50,8 +51,6 @@
     {% if restaurants.has_next %}
         <a href="?page={{ restaurants.next_page_number }}">次へ</a>
     {% endif %}
-
-    <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
 
     <script src="{% static 'js/geolocation.js' %}"></script>
 {% endblock %}
