@@ -122,4 +122,5 @@ class RestaurantsDetailView(TemplateView):
         data = response.json()
         restaurant = data['results']['shop'][0]
         context["restaurant"] = restaurant
+        context["genre_name"] = self.request.session.get('genre_name')
         return context
