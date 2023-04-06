@@ -5,28 +5,20 @@
 
     {% include 'widgets/form.html' %}
 
-    <div>
+    <div class="search_result">
         <h1>
             現在地から{{ search_range }}以内にあるお店
-            {% if genre_name %}
-                ・{{ genre_name }}
-            {% endif %}
+            {% if genre_name %}<span>{{ genre_name }}</span>{% endif %}
+            {% if search_budget %}<span>{{ search_budget }}</span>{% endif %}
         </h1>
         <p>
             {{ restaurants.paginator.count }}件 - 
             <span>{{ restaurants.start_index }}~{{ restaurants.end_index }}件</span>
         </p>
+        <p>
+            {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
+        </p>
     </div>
-
-    {% if restaurants.has_previous %}
-            <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
-    {% endif %}
-
-    {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
-
-    {% if restaurants.has_next %}
-        <a href="?page={{ restaurants.next_page_number }}">次へ</a>
-    {% endif %}
 
     {% for restaurant in restaurants %}
         <div class="card">

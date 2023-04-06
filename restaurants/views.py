@@ -22,6 +22,23 @@ class RestaurantsResultsView(TemplateView):
         '5': '3km',
     }
 
+    SEARCH_BUDGET_DICT = {
+        '': '',
+        'B009': '〜500円',
+        'B010': '501〜1000円',
+        'B011': '1001〜1500円',
+        'B001': '1501〜2000円',
+        'B002': '2001〜3000円',
+        'B003': '3001〜4000円',
+        'B008': '4001〜5000円',
+        'B004': '5001〜7000円',
+        'B005': '7001〜10000円',
+        'B006': '10001〜15000円',
+        'B012': '15001〜20000円',
+        'B013': '20001〜30000円',
+        'B014': '30001円〜',
+    }
+
     def get_restaurants_pages(self, restaurants, page=None):
         paginator = Paginator(restaurants, 20)
         try:
@@ -54,6 +71,7 @@ class RestaurantsResultsView(TemplateView):
         longitude = request.POST.get('longitude')
         search_range = request.POST.get('search_range')
         genre_id = request.POST.get('genre_id')
+        search_budget = request.POST.get('search_budget')
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
         params = {
@@ -62,6 +80,7 @@ class RestaurantsResultsView(TemplateView):
             'lng': longitude,
             'range': search_range,
             'genre': genre_id,
+            'budget': search_budget,
             'start': 1,
             'count': 100,
             'format': 'json',
@@ -82,13 +101,15 @@ class RestaurantsResultsView(TemplateView):
         request.session['restaurants'] = restaurants
         request.session['genre_name'] = genre_name
         request.session['search_range'] = self.SEARCH_RANGE_DICT.get(search_range)
+        request.session['search_budget'] = self.SEARCH_BUDGET_DICT.get(search_budget)
 
         pages = self.get_restaurants_pages(restaurants=restaurants, page=None)
 
         context = {
             'restaurants': pages,
             'genre_name': genre_name,
-            'search_range': self.SEARCH_RANGE_DICT.get(search_range)
+            'search_range': self.SEARCH_RANGE_DICT.get(search_range),
+            'search_budget': self.SEARCH_BUDGET_DICT.get(search_budget),
         }
         return self.render_to_response(context)
     
@@ -96,12 +117,14 @@ class RestaurantsResultsView(TemplateView):
         restaurants = request.session.get('restaurants')
         genre_name = request.session.get('genre_name')
         search_range = request.session.get('search_range')
+        search_budget = request.session.get('search_budget')
         page = request.GET.get('page')
         pages = self.get_restaurants_pages(restaurants=restaurants, page=page)
         context = {
             'restaurants': pages,
             'genre_name': genre_name,
             'search_range': search_range,
+            'search_budget': search_budget,
         }
         return self.render_to_response(context)
 
