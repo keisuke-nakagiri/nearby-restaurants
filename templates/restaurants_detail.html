@@ -4,14 +4,20 @@
 {% block content %}
     <div class="card">
         <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
-        <h1>店舗名: {{ restaurant.name }}</h1>
-        <p>ジャンル： {{ genre_name }}</p>
+        <a href="{{ restaurant.urls.pc }}">
+            <h1>店舗名: {{ restaurant.name }}</h1>
+        </a>
+        {% if genre_name %}
+            <p>ジャンル： {{ genre_name }}</p>
+        {% else %}
+            <p>{{ restaurant.genre.name }}</p>
+        {% endif %}
         <p>営業時間: {{ restaurant.open }}</p>
         <p>{{ restaurant.catch }}</p>
     </div>
-    <div class="map">
+    <div class="google-map">
         <h1>地図</h1>
-        <button>Google Mapで見る</button>
+        <a href="">Google Mapで見る</a>
     </div>
     <div class="access">
         <h1>アクセス</h1>
@@ -19,6 +25,9 @@
         <p>交通アクセス {{ restaurant.access }}</p>
         <p>最寄駅 {{ restaurant.station_name }}</p>
         <p>駐車場 {{ restaurant.parking }}</p>
+    </div>
+    <div class="links">
+        <a href="{{ restaurant.urls.pc }}">ホットペッパーグルメで店舗の情報を見る</a>
     </div>
     <div class="basic-info">
         <h1>基本情報</h1>

@@ -8,8 +8,12 @@
     <div class="search_result">
         <h1>
             現在地から{{ search_range }}以内にあるお店
-            {% if genre_name %}<span>{{ genre_name }}</span>{% endif %}
-            {% if search_budget %}<span>{{ search_budget }}</span>{% endif %}
+            {% if genre_name %}
+                <span>{{ genre_name }}</span>
+            {% endif %}
+            {% if search_budget %}
+                <span>{{ search_budget }}</span>
+            {% endif %}
         </h1>
         <p>
             {{ restaurants.paginator.count }}件 - 
@@ -26,9 +30,17 @@
             <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
                 <h1>{{ restaurant.name }}</h2>
             </a>
-            <p>{{ genre_name }}</p>
+            {% if genre_name %}
+                <p>{{ genre_name }}</p>
+            {% else %}
+                <p>{{ restaurant.genre.name }}</p>
+            {% endif %}
             <p>{{ restaurant.access }}</p>
-            <p>{{ restaurant.catch }}</p>
+            {% if restaurant.catch  %}
+                <p>{{ restaurant.catch }}</p>
+            {% else %}
+                <p>{{ restaurant.genre.catch }}</p>
+            {% endif %}
         </div>
     {% empty %}
         <p>該当する店舗がありませんでした。</p>
