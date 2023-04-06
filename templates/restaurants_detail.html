@@ -4,9 +4,7 @@
 {% block content %}
     <div class="card">
         <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
-        <a href="{{ restaurant.urls.pc }}">
-            <h1>店舗名: {{ restaurant.name }}</h1>
-        </a>
+        <h1>店舗名: {{ restaurant.name }}</h1>
         {% if genre_name %}
             <p>ジャンル： {{ genre_name }}</p>
         {% else %}
@@ -17,7 +15,10 @@
     </div>
     <div class="google-map">
         <h1>地図</h1>
-        <a href="">Google Mapで見る</a>
+        <iframe src="https://maps.google.com/maps?output=embed&q={{ restaurant.lat }},{{ restaurant.lng }}&t=m&hl=ja&z=18" width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+        <a href="https://maps.google.com/maps?q={{ restaurant.name }}+{{ restaurant.lat }},{{ restaurant.lng }}&ll={{ restaurant.lat }},{{ restaurant.lng }}&hl=ja">
+            Google Mapで見る
+        </a>
     </div>
     <div class="access">
         <h1>アクセス</h1>
