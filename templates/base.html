@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    {% block content %}{% endblock %}
+    <header>
+        <div class="logo">
+            <a href="{% url 'restaurants:search' %}">
+                ぐるめサーチ
+            </a>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        ©2023 Keisuke Nakagiri
+    </footer>
 </body>
 </html>

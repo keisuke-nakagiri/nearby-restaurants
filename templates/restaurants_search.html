@@ -2,9 +2,9 @@
 {% load static %}
 {% block title %}レストラン検索{% endblock %}
 {% block content %}
-    <h1>近くのレストランを検索</h1>
-    
-    {% include 'widgets/form.html' %}
-
+    <div class="search_form">
+        <h1>近くのレストランを検索</h1>
+        {% include 'widgets/form.html' %}
+    </div>
     <script src="{% static 'js/geolocation.js' %}"></script>
 {% endblock %}
