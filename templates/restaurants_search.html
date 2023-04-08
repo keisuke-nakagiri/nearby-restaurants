@@ -2,8 +2,8 @@
 {% load static %}
 {% block title %}レストラン検索{% endblock %}
 {% block content %}
-    <div class="search_form">
-        <h1>近くのレストランを検索</h1>
+    <div class="search_block">
+        <h1 class="search_title">近くのレストランを検索</h1>
         {% include 'widgets/form.html' %}
     </div>
     <script src="{% static 'js/geolocation.js' %}"></script>

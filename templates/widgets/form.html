@@ -1,4 +1,4 @@
-<form method="post" action="{% url 'restaurants:results' %}">
+<form class="search_form" method="post" action="{% url 'restaurants:results' %}">
     {% csrf_token %}
     <input type="text" id="latitude" name="latitude" required readonly hidden>
     <input type="text" id="longitude" name="longitude" required readonly hidden>
@@ -45,6 +45,6 @@
         <option value="B013">20001～30000円</option>
         <option value="B014">30001円～</option>
     </select>
-    <button type="submit" id="submit-button" disabled>検索</button>
+    <button type="submit" class="search_button" id="submit-button" disabled>検索</button>
 </form>
 <p id="loading-message">現在地を取得中です...</p>
