@@ -2,52 +2,72 @@
 
 {% block title %}店舗詳細{% endblock %}
 {% block content %}
-    <div class="card">
-        <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
-        <h1>店舗名: {{ restaurant.name }}</h1>
-        {% if genre_name %}
-            <p>ジャンル： {{ genre_name }}</p>
-        {% else %}
-            <p>{{ restaurant.genre.name }}</p>
-        {% endif %}
-        <p>営業時間: {{ restaurant.open }}</p>
-        <p>{{ restaurant.catch }}</p>
+    <div class="container">
+
+        <div class="restaurant">
+            <div class="restaurant_img">
+                <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
+            </div>
+            <div class="restaurant_info">
+                <h3>{{ restaurant.name }}</h3>
+                {% if genre_name %}
+                    <p class="genre">{{ genre_name }}</p>
+                {% else %}
+                    <p class="genre">{{ restaurant.genre.name }}</p>
+                {% endif %}
+                <p class="budget">{{ restaurant.budget.name }}</p>
+                <p class="access">{{ restaurant.access }}</p>
+                {% if restaurant.catch  %}
+                    <p class="catch">{{ restaurant.catch }}</p>
+                {% else %}
+                    <p class="catch">{{ restaurant.genre.catch }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="google_map">
+            <h1>地図</h1>
+            <iframe src="https://maps.google.com/maps?output=embed&q={{ restaurant.lat }},{{ restaurant.lng }}&t=m&hl=ja&z=18" width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+            <div class="click_map">
+                <a href="https://maps.google.com/maps?q={{ restaurant.name }}+{{ restaurant.lat }},{{ restaurant.lng }}&ll={{ restaurant.lat }},{{ restaurant.lng }}&hl=ja">
+                    Google Mapで見る
+                </a>
+            </div>
+        </div>
+
+        <div class="access_info">
+            <h1>アクセス</h1>
+            <p><span>住所</span>{{ restaurant.address }}</p>
+            <p><span>交通アクセス</span>{{ restaurant.access }}</p>
+            <p><span>最寄駅</span>{{ restaurant.station_name }}</p>
+            <p><span>駐車場</span>{{ restaurant.parking }}</p>
+        </div>
+
+        <div class="links">
+            <a href="{{ restaurant.urls.pc }}">ホットペッパーグルメで店舗の情報を見る</a>
+        </div>
+
+        <div class="basic_info">
+            <h1>基本情報</h1>
+            <p><span>店舗名</span>{{ restaurant.name }}</p>
+            <p><span>店舗名かな</span>{{ restaurant.name_kana }}</p>
+            <p><span>営業時間</span>{{ restaurant.open }}</p>
+            <p><span>定休日</span>{{ restaurant.close }}</p>
+            <p><span>住所</span>{{ restaurant.address }}</p>
+            <p><span>交通アクセス</span>{{ restaurant.access }}</p>
+            <p><span>禁煙::喫煙</span>{{ restaurant.non_smoking }}</p>
+            <p><span>クレジットカード</span>{{ restaurant.card }}</p>
+            <p><span>ペット可</span>{{ restaurant.pet }}</p>
+            <p><span>料金備考</span>{{ restaurant.budget_memo }}</p>
+            <p><span>wifi有無</span>{{ restaurant.wifi }}</p>
+            <p><span>バリアフリー</span>{{ restaurant.barrier_free }}</p>
+            <p><span>TV,プロジェクター</span>{{ restaurant.tv }}</p>
+            <p><span>飲み放題</span>{{ restaurant.free_drink }}</p>
+            <p><span>個室</span>{{ restaurant.private_room }}</p>
+            <p><span>駐車場 </span>{{ restaurant.parking }}</p>
+        </div>
+        <div class="home">
+            <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
+        </div>
     </div>
-    <div class="google-map">
-        <h1>地図</h1>
-        <iframe src="https://maps.google.com/maps?output=embed&q={{ restaurant.lat }},{{ restaurant.lng }}&t=m&hl=ja&z=18" width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
-        <a href="https://maps.google.com/maps?q={{ restaurant.name }}+{{ restaurant.lat }},{{ restaurant.lng }}&ll={{ restaurant.lat }},{{ restaurant.lng }}&hl=ja">
-            Google Mapで見る
-        </a>
-    </div>
-    <div class="access">
-        <h1>アクセス</h1>
-        <p>住所 {{ restaurant.address }}</p>
-        <p>交通アクセス {{ restaurant.access }}</p>
-        <p>最寄駅 {{ restaurant.station_name }}</p>
-        <p>駐車場 {{ restaurant.parking }}</p>
-    </div>
-    <div class="links">
-        <a href="{{ restaurant.urls.pc }}">ホットペッパーグルメで店舗の情報を見る</a>
-    </div>
-    <div class="basic-info">
-        <h1>基本情報</h1>
-        <p>店舗名 {{ restaurant.name }}</p>
-        <p>店舗名かな {{ restaurant.name_kana }}</p>
-        <p>営業時間 {{ restaurant.open }}</p>
-        <p>定休日 {{ restaurant.close }}</p>
-        <p>住所 {{ restaurant.address }}</p>
-        <p>交通アクセス {{ restaurant.access }}</p>
-        <p>禁煙::喫煙 {{ restaurant.non_smoking }}</p>
-        <p>クレジットカード {{ restaurant.card }}</p>
-        <p>ペット可 {{ restaurant.pet }}</p>
-        <p>料金備考 {{ restaurant.budget_memo }}</p>
-        <p>wifi有無 {{ restaurant.wifi }}</p>
-        <p>バリアフリー {{ restaurant.barrier_free }}</p>
-        <p>TV,プロジェクター {{ restaurant.tv }}</p>
-        <p>飲み放題 {{ restaurant.free_drink }}</p>
-        <p>個室 {{ restaurant.private_room }}</p>
-        <p>駐車場 {{ restaurant.parking }}</p>
-    </div>
-    <a href="{% url 'restaurants:search' %}">検索条件入力画面に戻る</a>
 {% endblock %}
