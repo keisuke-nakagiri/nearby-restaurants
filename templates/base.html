@@ -8,21 +8,26 @@
     <meta name="description" content="現在地付近のレストランを検索するアプリです。">
     <meta name="keywords" content="nearby restaurants,現在地付近のレストラン">
     <title>{% block title %}{% endblock %}</title>
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/modern-css-reset/dist/reset.min.css"
+    />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
+
 <body>
     <header>
         <div class="logo">
-            <a href="{% url 'restaurants:search' %}">
-                ぐるめサーチ
-            </a>
+            <a href="{% url 'restaurants:search' %}">ぐるめサーチ</a>
         </div>
     </header>
+
     <main>
         {% block content %}{% endblock %}
     </main>
+
     <footer>
-        ©2023 keisuke-nakagiri
+        <p class="footer_copyright">©2023 keisuke-nakagiri</p>
     </footer>
 </body>
 </html>

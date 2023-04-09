@@ -1,15 +1,15 @@
-<form class="search_form" method="post" action="{% url 'restaurants:results' %}">
+<form class="search_bar" method="post" action="{% url 'restaurants:results' %}">
     {% csrf_token %}
     <input type="text" id="latitude" name="latitude" required readonly hidden>
     <input type="text" id="longitude" name="longitude" required readonly hidden>
-    <select name="search_range" required>
+    <select class="search_select" name="search_range" required>
         <option value="1">300m</option>
         <option value="2">500m</option>
         <option value="3">1km</option>
         <option value="4">2km</option>
         <option value="5">3km</option>
     </select>
-    <select name="genre_id">
+    <select class="search_select" name="genre_id">
         <option value="">お店のジャンルすべて</option>
         <option value="G001">居酒屋</option>
         <option value="G002">ダイニングバー・バル</option>
@@ -29,7 +29,7 @@
         <option value="G014">カフェ・スイーツ</option>
         <option value="G015">その他グルメ</option>
     </select>
-    <select name="search_budget">
+    <select class="search_select" name="search_budget">
         <option value="">こだわらない</option>
         <option value="B009">～500円</option>
         <option value="B010">501～1000円</option>

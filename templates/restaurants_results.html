@@ -3,58 +3,62 @@
 {% block title %}レストラン検索結果{% endblock %}
 {% block content %}
 
-    {% include 'widgets/form.html' %}
-
-    <div class="search_result">
-        <h1>
-            現在地から{{ search_range }}以内にあるお店
-            {% if genre_name %}
-                <span>{{ genre_name }}</span>
-            {% endif %}
-            {% if search_budget %}
-                <span>{{ search_budget }}</span>
-            {% endif %}
-        </h1>
-        <p>
-            {{ restaurants.paginator.count }}件 - 
-            <span>{{ restaurants.start_index }}~{{ restaurants.end_index }}件</span>
-        </p>
-        <p>
-            {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
-        </p>
+    <div class="search_form">
+        {% include 'widgets/form.html' %}
     </div>
 
-    {% for restaurant in restaurants %}
-        <div class="card">
-            <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
-            <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
-                <h1>{{ restaurant.name }}</h2>
-            </a>
-            {% if genre_name %}
-                <p>{{ genre_name }}</p>
-            {% else %}
-                <p>{{ restaurant.genre.name }}</p>
-            {% endif %}
-            <p>{{ restaurant.access }}</p>
-            {% if restaurant.catch  %}
-                <p>{{ restaurant.catch }}</p>
-            {% else %}
-                <p>{{ restaurant.genre.catch }}</p>
-            {% endif %}
+    <div class="container">
+        <div class="search_results_text">
+            <h1>
+                現在地から{{ search_range }}以内にあるお店
+                {% if genre_name %}
+                    <span>{{ genre_name }}</span>
+                {% endif %}
+                {% if search_budget %}
+                    <span>{{ search_budget }}</span>
+                {% endif %}
+            </h1>
+            <p>
+                {{ restaurants.paginator.count }}件 - 
+                <span>{{ restaurants.start_index }}~{{ restaurants.end_index }}件</span>
+            </p>
+            <p>
+                {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
+            </p>
         </div>
-    {% empty %}
-        <p>該当する店舗がありませんでした。</p>
-    {% endfor %}
 
-    {% if restaurants.has_previous %}
-        <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
-    {% endif %}
+        {% for restaurant in restaurants %}
+            <div class="search_results_restaurant">
+                <img src="{{ restaurant.photo.pc.l }}" alt="{{ restaurant.name }}">
+                <a href="{% url 'restaurants:detail' pk=restaurant.id %}">
+                    <h1>{{ restaurant.name }}</h2>
+                </a>
+                {% if genre_name %}
+                    <p>{{ genre_name }}</p>
+                {% else %}
+                    <p>{{ restaurant.genre.name }}</p>
+                {% endif %}
+                <p>{{ restaurant.access }}</p>
+                {% if restaurant.catch  %}
+                    <p>{{ restaurant.catch }}</p>
+                {% else %}
+                    <p>{{ restaurant.genre.catch }}</p>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>該当する店舗がありませんでした。</p>
+        {% endfor %}
 
-    {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
+        {% if restaurants.has_previous %}
+            <a href="?page={{ restaurants.previous_page_number }}">前へ</a>
+        {% endif %}
 
-    {% if restaurants.has_next %}
-        <a href="?page={{ restaurants.next_page_number }}">次へ</a>
-    {% endif %}
+        {{ restaurants.number }}/{{ restaurants.paginator.num_pages }}
 
-    <script src="{% static 'js/geolocation.js' %}"></script>
+        {% if restaurants.has_next %}
+            <a href="?page={{ restaurants.next_page_number }}">次へ</a>
+        {% endif %}
+
+        <script src="{% static 'js/geolocation.js' %}"></script>
+    </div>
 {% endblock %}
