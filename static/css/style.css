@@ -46,7 +46,7 @@ main .container .search_form {
     border: 3px solid gray;
     margin: 30% auto;
     position: relative;
-    background-color: rgb(255, 242, 242);
+    background-color: white;
 }
 
 main .container .search_form .search_title {
@@ -285,13 +285,13 @@ main .container .links a {
     height: 70px;
     text-align: center;
     padding: 2%;
-    color: black;
+    color: white;
     background-color: orange;
 }
 
 main .container .links a:hover {
     border: none;
-    color: white;
+    color: rgba(255, 255, 255, 0.753);
     background-color: #F24726;
     text-decoration: none;
     font-weight: 60;
