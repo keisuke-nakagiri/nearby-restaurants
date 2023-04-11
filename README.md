@@ -28,6 +28,6 @@
 - requests 2.28.2
 <br><br>
 
-### 使用しているAPI
+## 使用しているAPI
 - ホットペッパーグルメサーチAPI
 - 位置情報 API (Geolocation API)
