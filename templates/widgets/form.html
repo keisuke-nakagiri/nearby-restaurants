@@ -1,5 +1,4 @@
-<form class="search_bar" method="post" action="{% url 'restaurants:results' %}">
-    {% csrf_token %}
+<form class="search_bar" method="get" action="{% url 'restaurants:results' %}">
     <input type="text" id="latitude" name="latitude" required readonly hidden>
     <input type="text" id="longitude" name="longitude" required readonly hidden>
     <select class="search_select" name="search_range" required>

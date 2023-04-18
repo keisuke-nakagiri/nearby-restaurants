@@ -1,4 +1,5 @@
 import requests
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -38,17 +39,6 @@ class RestaurantsResultsView(TemplateView):
         'B013': '20001〜30000円',
         'B014': '30001円〜',
     }
-
-    def get_restaurants_pages(self, restaurants, page=None):
-        paginator = Paginator(restaurants, 20)
-        try:
-            pages = paginator.page(page)
-        except PageNotAnInteger:
-            pages = paginator.page(1)
-        except EmptyPage:
-            pages = paginator.page(1)
-
-        return pages
     
     def get_genre_name(self, genre_id):
         if not genre_id:
@@ -66,65 +56,81 @@ class RestaurantsResultsView(TemplateView):
 
         return genre_name
 
-    def post(self, request):
-        latitude = request.POST.get('latitude')
-        longitude = request.POST.get('longitude')
-        search_range = request.POST.get('search_range')
-        genre_id = request.POST.get('genre_id')
-        search_budget = request.POST.get('search_budget')
+    def get(self, request):
+
+        if request.GET.get('page'):
+            page = request.GET.get('page')
+            restaurants = request.session.get('restaurants')
+            genre_name = request.session.get('genre_name')
+            search_range = request.session.get('search_range')
+            search_budget = request.session.get('search_budget')
+            paginator = Paginator(restaurants, 20)
+            page_obj = paginator.page(page)
+
+            context = {
+                'restaurants': page_obj,
+                'genre_name': genre_name,
+                'search_range': self.SEARCH_RANGE_DICT.get(search_range),
+                'search_budget': self.SEARCH_BUDGET_DICT.get(search_budget),
+            }
+
+            return self.render_to_response(context)
+
+        latitude = request.GET.get('latitude')
+        longitude = request.GET.get('longitude')
+        search_range = request.GET.get('search_range')
+        genre_id = request.GET.get('genre_id')
+        search_budget = request.GET.get('search_budget')
+        page = request.GET.get('page', 1)
+        per_page = 100
+        start = (int(page) - 1) * int(per_page) + 1
 
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
         params = {
             'key': HOTPEPPER_API_KEY,
-            'lat': latitude,
-            'lng': longitude,
+            'lat': 35.669220,
+            'lng': 139.761457,
             'range': search_range,
             'genre': genre_id,
             'budget': search_budget,
-            'start': 1,
-            'count': 100,
+            'start': start,
+            'count': per_page,
             'format': 'json',
         }
 
         response = requests.get(url, params)
         data = response.json()
-        restaurants = data['results']['shop']
         total_hit_count = data['results']['results_available']
+        num_of_searches = (total_hit_count - 1) // per_page + 1
 
-        for i in range(1, total_hit_count // 100 + 1):
-            params['start'] = i * 100 + 1
-            response = requests.get(url, params)
-            restaurants += response.json()['results']['shop']
+        results = []
+        with ThreadPoolExecutor() as executor:
+            future_to_restaurant_list = {}
+            for i in range(num_of_searches):
+                start = i * per_page + 1
+                params['start'] = start
+                future = executor.submit(requests.get, url, params)
+                future_to_restaurant_list[future] = i
+            for future in as_completed(future_to_restaurant_list):
+                response = future.result()
+                results += response.json()['results']['shop']
         
+        paginator = Paginator(results, 20)
+        page_obj = paginator.get_page(page)
+
         genre_name = self.get_genre_name(genre_id=genre_id)
 
-        request.session['restaurants'] = restaurants
+        request.session['restaurants'] = results
         request.session['genre_name'] = genre_name
-        request.session['search_range'] = self.SEARCH_RANGE_DICT.get(search_range)
-        request.session['search_budget'] = self.SEARCH_BUDGET_DICT.get(search_budget)
+        request.session['search_range'] = search_range
+        request.session['search_budget'] = search_budget
 
-        pages = self.get_restaurants_pages(restaurants=restaurants, page=None)
 
         context = {
-            'restaurants': pages,
+            'restaurants': page_obj,
             'genre_name': genre_name,
             'search_range': self.SEARCH_RANGE_DICT.get(search_range),
             'search_budget': self.SEARCH_BUDGET_DICT.get(search_budget),
-        }
-        return self.render_to_response(context)
-    
-    def get(self, request):
-        restaurants = request.session.get('restaurants')
-        genre_name = request.session.get('genre_name')
-        search_range = request.session.get('search_range')
-        search_budget = request.session.get('search_budget')
-        page = request.GET.get('page')
-        pages = self.get_restaurants_pages(restaurants=restaurants, page=page)
-        context = {
-            'restaurants': pages,
-            'genre_name': genre_name,
-            'search_range': search_range,
-            'search_budget': search_budget,
         }
         return self.render_to_response(context)
 
