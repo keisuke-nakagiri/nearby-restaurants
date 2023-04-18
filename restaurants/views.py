@@ -88,8 +88,8 @@ class RestaurantsResultsView(TemplateView):
         url = 'http://webservice.recruit.co.jp/hotpepper/gourmet/v1/'
         params = {
             'key': HOTPEPPER_API_KEY,
-            'lat': 35.669220,
-            'lng': 139.761457,
+            'lat': latitude,
+            'lng': longitude,
             'range': search_range,
             'genre': genre_id,
             'budget': search_budget,
